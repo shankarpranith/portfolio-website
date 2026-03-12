@@ -39,7 +39,6 @@ export default function Education() {
     }
   ];
 
-  // Canvas Neural Brain Animation
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -53,16 +52,14 @@ export default function Education() {
 
     class Particle {
       constructor() {
-        // Bias starting positions towards the center to create a "brain" cluster shape
         const angle = Math.random() * Math.PI * 2;
         const radius = (Math.random() * Math.min(width, height)) / 2.5;
         this.x = width / 2 + Math.cos(angle) * radius;
         this.y = height / 2 + Math.sin(angle) * radius;
-        
         this.vx = (Math.random() - 0.5) * 0.5;
         this.vy = (Math.random() - 0.5) * 0.5;
         this.radius = Math.random() * 2 + 1;
-        this.color = Math.random() > 0.5 ? '#06b6d4' : '#8b5cf6'; // Neon blue & purple
+        this.color = Math.random() > 0.5 ? '#06b6d4' : '#8b5cf6';
         this.baseX = this.x;
         this.baseY = this.y;
       }
@@ -70,8 +67,6 @@ export default function Education() {
       update() {
         this.x += this.vx;
         this.y += this.vy;
-
-        // Keep particles somewhat tethered to their base to maintain the brain shape
         const dx = this.baseX - this.x;
         const dy = this.baseY - this.y;
         this.x += dx * 0.005;
@@ -86,32 +81,23 @@ export default function Education() {
       }
     }
 
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
+    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
 
     let animationFrameId;
-
     const animate = () => {
       ctx.clearRect(0, 0, width, height);
-
-      // Draw connections
       for (let i = 0; i < particleCount; i++) {
         particles[i].update();
         particles[i].draw();
-
         for (let j = i + 1; j < particleCount; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-
           if (distance < maxDistance) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             const opacity = 1 - distance / maxDistance;
-            
-            // Highlight connections if interacting with a node (simulated brain activity)
             const isPulse = Math.random() > 0.99; 
             ctx.strokeStyle = isPulse ? `rgba(6, 182, 212, ${opacity + 0.5})` : `rgba(139, 92, 246, ${opacity * 0.3})`;
             ctx.lineWidth = isPulse ? 1.5 : 0.5;
@@ -121,7 +107,6 @@ export default function Education() {
       }
       animationFrameId = requestAnimationFrame(animate);
     };
-
     animate();
 
     const handleResize = () => {
@@ -129,7 +114,6 @@ export default function Education() {
       height = canvas.height = window.innerHeight;
     };
     window.addEventListener('resize', handleResize);
-
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
@@ -146,24 +130,20 @@ export default function Education() {
           background-color: #0b0b0b;
           color: white;
           font-family: 'Inter', system-ui, sans-serif;
-          overflow: hidden;
+          overflow-x: hidden;
         }
 
         .brain-canvas {
           position: fixed;
-          top: 0; left: 0;
-          width: 100%; height: 100%;
-          z-index: 0;
-          pointer-events: none;
-          opacity: 0.7;
+          top: 0; left: 0; width: 100%; height: 100%;
+          z-index: 0; pointer-events: none; opacity: 0.7;
         }
 
         .gradient-overlay {
           position: fixed;
           top: 0; left: 0; width: 100%; height: 100%;
           background: radial-gradient(circle at center, transparent 0%, #0b0b0b 80%);
-          z-index: 1;
-          pointer-events: none;
+          z-index: 1; pointer-events: none;
         }
 
         .content-wrapper {
@@ -173,39 +153,21 @@ export default function Education() {
           margin: 0 auto;
         }
 
-        .page-header {
-          text-align: center;
-          margin-bottom: 80px;
-          animation: fadeInDown 1s ease forwards;
-        }
+        .page-header { text-align: center; margin-bottom: 60px; }
 
-        @keyframes fadeInDown {
-          from { opacity: 0; transform: translateY(-20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
+        .neural-timeline { position: relative; padding: 40px 0; }
 
-        /* Neural Timeline Structure */
-        .neural-timeline {
-          position: relative;
-          padding: 40px 0;
-        }
-
-        /* The central glowing spine (Axon) */
         .neural-spine {
           position: absolute;
-          left: 50%;
-          top: 0;
-          bottom: 0;
+          left: 50%; top: 0; bottom: 0;
           width: 4px;
           background: rgba(139, 92, 246, 0.2);
           transform: translateX(-50%);
           border-radius: 4px;
-          overflow: hidden;
         }
 
         .neural-spine::after {
-          content: '';
-          position: absolute;
+          content: ''; position: absolute;
           top: 0; left: 0; width: 100%; height: 30%;
           background: linear-gradient(to bottom, transparent, #06b6d4, #8b5cf6, transparent);
           animation: energy-flow 3s linear infinite;
@@ -216,7 +178,6 @@ export default function Education() {
           100% { transform: translateY(400%); }
         }
 
-        /* Timeline Items */
         .timeline-item {
           display: flex;
           justify-content: space-between;
@@ -224,60 +185,21 @@ export default function Education() {
           width: 100%;
           margin-bottom: 60px;
           position: relative;
-          opacity: 0;
-          animation: slideUpFade 0.8s ease forwards;
         }
 
-        .timeline-item:nth-child(1) { animation-delay: 0.2s; }
-        .timeline-item:nth-child(2) { animation-delay: 0.4s; }
-        .timeline-item:nth-child(3) { animation-delay: 0.6s; }
-
-        @keyframes slideUpFade {
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* The Neuron Node */
         .neuron-node {
           position: absolute;
           left: 50%;
           transform: translate(-50%, 0);
-          width: 24px;
-          height: 24px;
+          width: 24px; height: 24px;
           background: #0b0b0b;
           border: 3px solid #06b6d4;
           border-radius: 50%;
           z-index: 20;
-          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-          cursor: pointer;
           box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
         }
 
-        .neuron-node::after {
-          content: '';
-          position: absolute;
-          inset: -8px;
-          border-radius: 50%;
-          border: 1px solid rgba(139, 92, 246, 0.6);
-          animation: neuron-pulse 2s infinite;
-        }
-
-        @keyframes neuron-pulse {
-          0% { transform: scale(1); opacity: 1; }
-          100% { transform: scale(2); opacity: 0; }
-        }
-
-        .timeline-item.active .neuron-node, .neuron-node:hover {
-          background: #06b6d4;
-          transform: translate(-50%, 0) scale(1.3);
-          box-shadow: 0 0 30px #06b6d4, 0 0 50px #8b5cf6;
-          border-color: #ffffff;
-        }
-
-        /* The Content Cards */
-        .card-wrapper {
-          width: 45%;
-          perspective: 1000px;
-        }
+        .card-wrapper { width: 45%; }
 
         .glass-card {
           background: rgba(255, 255, 255, 0.03);
@@ -286,16 +208,6 @@ export default function Education() {
           border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: 20px;
           padding: 32px;
-          transition: all 0.4s ease;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .timeline-item.active .glass-card {
-          border-color: rgba(6, 182, 212, 0.4);
-          box-shadow: 0 20px 40px rgba(0,0,0, 0.5), 0 0 30px rgba(6, 182, 212, 0.15);
-          transform: translateY(-5px) scale(1.02);
-          background: rgba(255, 255, 255, 0.05);
         }
 
         .date-badge {
@@ -305,38 +217,55 @@ export default function Education() {
           padding: 6px 14px;
           border-radius: 30px;
           font-size: 0.85rem;
-          font-weight: 600;
           margin-bottom: 16px;
           border: 1px solid rgba(139, 92, 246, 0.3);
         }
 
-        .degree { font-size: 1.4rem; font-weight: 700; color: white; margin: 0 0 8px 0; letter-spacing: -0.5px; }
-        .institution { font-size: 1.1rem; color: #06b6d4; font-weight: 500; margin: 0 0 16px 0; }
-        .grade { display: inline-block; background: rgba(6, 182, 212, 0.1); color: #67e8f9; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; margin-bottom: 16px; }
-        .desc { color: #a3a3a3; font-size: 0.95rem; line-height: 1.7; margin: 0; }
+        .degree { font-size: 1.4rem; font-weight: 700; color: white; margin: 0 0 8px 0; }
+        .institution { font-size: 1.1rem; color: #06b6d4; margin-bottom: 16px; }
+        .grade { display: inline-block; background: rgba(6, 182, 212, 0.1); color: #67e8f9; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; margin-bottom: 16px; }
+        .desc { color: #a3a3a3; font-size: 0.95rem; line-height: 1.7; }
 
-        /* Responsive Design */
+        /* --- MOBILE FIXES --- */
         @media (max-width: 768px) {
-          .neural-spine { left: 30px; }
-          .neuron-node { left: 30px; }
-          .timeline-item { justify-content: flex-end; }
-          .card-wrapper { width: calc(100% - 70px); }
-          .timeline-item.active .neuron-node, .neuron-node:hover { transform: translate(-50%, 0) scale(1.2); }
+          .page-header h1 { font-size: 2.2rem !important; }
+          .neural-spine { left: 20px; transform: none; }
+          .neuron-node { left: 20px; transform: translate(-50%, 0); }
+          
+          .timeline-item { 
+            flex-direction: column;
+            align-items: flex-start;
+            padding-left: 45px;
+            justify-content: flex-start;
+          }
+
+          .card-wrapper { 
+            width: 100% !important; 
+            visibility: visible !important; 
+            display: block !important;
+          }
+
+          /* Hide the 'empty' placeholders used for desktop alignment */
+          div[style*="visibility: hidden"] {
+            display: none !important;
+          }
+
+          .glass-card { padding: 20px; }
+          .degree { font-size: 1.2rem; }
+          .institution { font-size: 1rem; }
         }
       `}</style>
 
-      {/* Background Animations */}
       <canvas ref={canvasRef} className="brain-canvas"></canvas>
       <div className="gradient-overlay"></div>
 
-      {/* Foreground Content */}
       <div className="content-wrapper">
         <div className="page-header">
-          <h1 style={{ fontSize: '3rem', fontWeight: '800', margin: '0 0 12px 0', letterSpacing: '-1.5px', background: 'linear-gradient(90deg, #06b6d4, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          <h1 style={{ fontSize: '3rem', fontWeight: '800', margin: '0 0 12px 0', background: 'linear-gradient(90deg, #06b6d4, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             Academic Synapses
           </h1>
-          <p style={{ color: '#a3a3a3', fontSize: '1.1rem', margin: '0 auto', maxWidth: '600px' }}>
-            Tracing the neural pathways of my education. Hover over the nodes to activate the memory sectors.
+          <p style={{ color: '#a3a3a3', fontSize: '1.1rem' }}>
+            Tracing the neural pathways of my education.
           </p>
         </div>
 
@@ -350,7 +279,6 @@ export default function Education() {
               onMouseEnter={() => setActiveNode(data.id)}
               onMouseLeave={() => setActiveNode(null)}
             >
-              {/* Left Side (Empty on Right-aligned, Card on Left-aligned) */}
               {data.align === 'left' ? (
                 <div className="card-wrapper">
                   <div className="glass-card">
@@ -363,10 +291,8 @@ export default function Education() {
                 </div>
               ) : <div className="card-wrapper" style={{ visibility: 'hidden' }}></div>}
 
-              {/* The Central Neuron */}
               <div className="neuron-node"></div>
 
-              {/* Right Side (Card on Right-aligned, Empty on Left-aligned) */}
               {data.align === 'right' ? (
                 <div className="card-wrapper">
                   <div className="glass-card">
@@ -380,7 +306,6 @@ export default function Education() {
               ) : <div className="card-wrapper" style={{ visibility: 'hidden' }}></div>}
             </div>
           ))}
-
         </div>
       </div>
     </div>

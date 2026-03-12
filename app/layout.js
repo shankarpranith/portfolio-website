@@ -17,6 +17,7 @@ export default function RootLayout({ children }) {
       }}>
         
         {/* CSS for the floating navbar */}
+        {/* CSS for the floating navbar */}
         <style>{`
           .floating-nav {
             position: fixed;
@@ -49,6 +50,7 @@ export default function RootLayout({ children }) {
             font-weight: 700;
             margin-right: 16px;
             letter-spacing: -0.5px;
+            flex-shrink: 0;
           }
 
           .nav-link {
@@ -57,11 +59,34 @@ export default function RootLayout({ children }) {
             font-size: 0.95rem;
             font-weight: 500;
             transition: all 0.3s ease;
+            white-space: nowrap;
           }
 
           .nav-link:hover {
             color: #ffffff;
             text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+          }
+
+          /* --- MOBILE RESPONSIVENESS ADDED HERE --- */
+          @media (max-width: 768px) {
+            .floating-nav {
+              width: 90vw; /* Take up 90% of screen width */
+              padding: 12px 20px; /* Smaller padding */
+              gap: 16px; /* Smaller gap between links */
+              overflow-x: auto; /* Allow swiping horizontally */
+              justify-content: flex-start; /* Align left so swiping feels natural */
+              -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
+              scrollbar-width: none; /* Hide scrollbar Firefox */
+            }
+            
+            /* Hide scrollbar for Chrome/Safari/Opera */
+            .floating-nav::-webkit-scrollbar {
+              display: none; 
+            }
+
+            .nav-link {
+              font-size: 0.85rem; /* Slightly smaller text */
+            }
           }
         `}</style>
 
